@@ -74018,13 +74018,17 @@ const uL = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/, nm = new Oe("aie-vid
   },
   addNodeView() {
     return (t) => {
-      const e = document.createElement("div");
-      if (!this.editor.isEditable)
-        return {
-          dom: e
+      const { src: e, width: n, align: r } = t.node.attrs;
+      if (!this.editor.isEditable) {
+        const o = document.createElement("video");
+        o.setAttribute("controls", "controls"), o.setAttribute("width", n), o.classList.add(`align-${r}`);
+        const a = document.createElement("source");
+        return a.setAttribute("src", e), o.appendChild(a), {
+          dom: o
         };
-      const { src: n, width: r, align: i } = t.node.attrs;
-      return e.classList.add(`align-${i}`), e.innerHTML = `
+      }
+      const i = document.createElement("div");
+      return i.classList.add(`align-${r}`), i.innerHTML = `
                   <div class="aie-resize-wrapper">
                       <div class="aie-resize">
                           <div class="aie-resize-btn-top-left" data-position="left" draggable="true"></div>
@@ -74032,12 +74036,12 @@ const uL = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/, nm = new Oe("aie-vid
                           <div class="aie-resize-btn-bottom-left" data-position="left" draggable="true"></div>
                           <div class="aie-resize-btn-bottom-right" data-position="right" draggable="true"></div>
                       </div>
-                      <video controls="controls" width="${r}" class="resize-obj">
-                          <source src="${n}">
+                      <video controls="controls" width="${n}" class="resize-obj">
+                          <source src="${e}">
                       </video>
                   </div>
-                `, zh(e, this.editor.view.dom, (o) => this.editor.commands.updateAttributes("video", o)), {
-        dom: e
+                `, zh(i, this.editor.view.dom, (o) => this.editor.commands.updateAttributes("video", o)), {
+        dom: i
       };
     };
   },
