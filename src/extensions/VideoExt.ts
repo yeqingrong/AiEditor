@@ -167,20 +167,34 @@ export const VideoExt = Node.create<VideoOptions>({
 
     addNodeView() {
         return (props) => {
-            const {src, width, align} = props.node.attrs;
+            const {src, width, align, controls, poster} = props.node.attrs;
+            console.log(props.node.attrs)
             if (!this.editor.isEditable) {
                 const container = document.createElement('video');
-                container.setAttribute('controls', 'controls');
                 container.setAttribute('width', width);
                 container.classList.add(`align-${align}`);
                 const source = document.createElement('source');
                 source.setAttribute('src', src);
+                if(controls !== "false"){
+                    container.setAttribute('controls', 'controls');
+                }
+                if(poster){
+                    container.setAttribute('poster', poster);
+                }
                 container.appendChild(source);
 
                 return {
                     dom: container
-                };
+                }
             }
+
+            const videoAttributes = [
+                controls !== "false" ? `controls="controls"` : '',
+                width ? `width="${width}"` : '',
+                `class="resize-obj"`,
+                poster ? `poster="${poster}"` : ""
+            ].filter(Boolean).join(' ');
+
             const container = document.createElement('div')
             container.classList.add(`align-${align}`)
             container.innerHTML = `
@@ -191,7 +205,7 @@ export const VideoExt = Node.create<VideoOptions>({
                           <div class="aie-resize-btn-bottom-left" data-position="left" draggable="true"></div>
                           <div class="aie-resize-btn-bottom-right" data-position="right" draggable="true"></div>
                       </div>
-                      <video controls="controls" width="${width}" class="resize-obj">
+                      <video ${videoAttributes}>
                           <source src="${src}">
                       </video>
                   </div>
